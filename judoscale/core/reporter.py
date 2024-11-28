@@ -144,16 +144,20 @@ reporter = Reporter(config=config)
 
 previous_handler = signal.getsignal(signal.SIGTERM)
 
+print("******** JudoScale_1 *************")
 
 def graceful_shutdown(signum, frame):
+    print("******** JudoScale_2 *************")
     reporter.signal_handler(signum, frame)
     # If there was a previous handler and it's not SIG_DFL or SIG_IGN, call it
     if callable(previous_handler) and previous_handler not in (
         signal.SIG_DFL,
         signal.SIG_IGN,
     ):
+        print(f"******** JudoScale_2.1 signum is {signum} *************")
         previous_handler(signum, frame)
     else:
+        print(f"******** JudoScale_2.2 signum is {signum} *************")
         # If no previous handler, use default behavior (exit the process)
         sys.exit(0)
 
