@@ -117,10 +117,17 @@ class CeleryMetricsCollector(JobMetricsCollector):
 
         if self.adapter_config["TRACK_BUSY_JOBS"]:
             busy_counts = defaultdict(lambda: 0)
-            if workers_tasks := self.inspect.active():
-                for active_tasks in workers_tasks.values():
-                    for task in active_tasks:
-                        busy_counts[task["delivery_info"]["routing_key"]] += 1
+
+            alive_workers = self.inspect.ping()
+            if alive_workers:
+                if workers_tasks := self.inspect.active():
+                    for active_tasks in workers_tasks.values():
+                        for task in active_tasks:
+                            busy_counts[task["delivery_info"]["routing_key"]] += 1
+            else:
+                print("---- No alive workers to inspect.")
+                self.inspect = self.broker.control.inspect()
+                print("---- Called self.broker.control.inspect() AGAIN")
 
             for queue in self.queues:
                 count = busy_counts[queue]
