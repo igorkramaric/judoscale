@@ -38,11 +38,11 @@ class TaskSentHandler(Thread):
 
     def run(self):
         logger.debug("Starting TaskSentHandler")
-        recv = self.collector.broker.events.Receiver(
-            self.connection,
-            handlers={"task-sent": self.task_sent},
-        )
-        recv.capture(wakeup=False)
+        # recv = self.collector.broker.events.Receiver(
+        #     self.connection,
+        #     handlers={"task-sent": self.task_sent},
+        # )
+        # recv.capture(wakeup=False)
 
 
 class CeleryMetricsCollector(JobMetricsCollector):
@@ -84,7 +84,7 @@ class CeleryMetricsCollector(JobMetricsCollector):
             self._celery_queues.add(queue_name)
 
         logger.debug(f"Found initial queues: {list(self._celery_queues)}")
-        #self.task_sent_handler.start()
+        self.task_sent_handler.start()
 
     @property
     def is_supported_redis_version(self):
