@@ -38,11 +38,11 @@ class TaskSentHandler(Thread):
 
     def run(self):
         logger.debug("Starting TaskSentHandler")
-        # recv = self.collector.broker.events.Receiver(
-        #     self.connection,
-        #     handlers={"task-sent": self.task_sent},
-        # )
-        # recv.capture(wakeup=False)
+        recv = self.collector.broker.events.Receiver(
+            self.connection,
+            handlers={"task-sent": self.task_sent},
+        )
+        recv.capture(wakeup=False)
 
 
 class CeleryMetricsCollector(JobMetricsCollector):
