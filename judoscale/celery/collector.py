@@ -126,6 +126,9 @@ class CeleryMetricsCollector(JobMetricsCollector):
                             busy_counts[task["delivery_info"]["routing_key"]] += 1
             else:
                 print("---- No alive workers to inspect.")
+                connection = self.inspect.connection
+                if connection:
+                    connection.close()
                 self.inspect = self.broker.control.inspect()
                 print("---- Called self.broker.control.inspect() AGAIN")
 
